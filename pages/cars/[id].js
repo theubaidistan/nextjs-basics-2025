@@ -61,6 +61,7 @@
 //     };
 // }
 //*---------------------------------------------------------------------------
+// pages/cars/[id].js
 import Head from "next/head";
 import Image from "next/image";
 import styles from "../../styles/Home.module.css";
@@ -78,7 +79,7 @@ export default function Car({ car }) {
 
       <main className={styles.main}>
         <h1 className={styles.title}>{car.id}</h1>
-        <Image src={car.image} width={300} height={200} alt={car.id} />
+        <Image src={car.image} width={600} height={400} alt={car.id} />
       </main>
     </div>
   );
@@ -86,16 +87,18 @@ export default function Car({ car }) {
 
 export async function getServerSideProps({ params }) {
   try {
-    // Build path to JSON file in public folder
-    const filePath = path.join(process.cwd(), "public", `${params.id}.json`);
-
-    // Read and parse JSON
+    // Make sure the filename is lowercase to match your public folder
+    const filePath = path.join(
+      process.cwd(),
+      "public",
+      `${params.id.toLowerCase()}.json`
+    );
     const data = JSON.parse(fs.readFileSync(filePath, "utf8"));
 
     return { props: { car: data } };
   } catch (err) {
     console.error(err);
-    // Show 404 if JSON file not found
+    // If JSON file not found, show 404 page
     return { notFound: true };
   }
 }
