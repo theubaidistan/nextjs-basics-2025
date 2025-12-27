@@ -25,10 +25,10 @@ export default function Car({ car }) {
 export async function getServerSideProps({ params }) {
   const BASE_URL =
     process.env.NODE_ENV === "production"
-      ? "https://nextjs-basics-2025.vercel.app/"
-      : "http://localhost:3000/";
+      ? "https://nextjs-basics-2025.vercel.app"
+      : "http://localhost:3000";
 
-  const req = await fetch(`${BASE_URL}${params.id}.json`);
+  const req = await fetch(`${BASE_URL}/${params.id}.json`);
   const data = await req.json();
 
   return {
