@@ -79,7 +79,13 @@ export default function Car({ car }) {
 
       <main className={styles.main}>
         <h1 className={styles.title}>{car.id}</h1>
-        <Image src={car.image} width={600} height={400} alt={car.id} />
+        <Image
+          src={car.image}
+          width={300}
+          height={600}
+          alt={car.id}
+          className={styles.carImage}
+        />
       </main>
     </div>
   );
