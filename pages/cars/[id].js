@@ -1,40 +1,40 @@
-import { useRouter } from "next/router";
-import Head from "next/head";
-import styles from "../../styles/Home.module.css";
+// import { useRouter } from "next/router";
+// import Head from "next/head";
+// import styles from "../../styles/Home.module.css";
 
-export default function Car({ car }) {
-  const router = useRouter();
-  const { id } = router.query;
-  return (
-    <div className={styles.container}>
-      <Head>
-        <title>
-          {car.color} {car.id}
-        </title>
-      </Head>
+// export default function Car({ car }) {
+//   const router = useRouter();
+//   const { id } = router.query;
+//   return (
+//     <div className={styles.container}>
+//       <Head>
+//         <title>
+//           {car.color} {car.id}
+//         </title>
+//       </Head>
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>{id}</h1>
+//       <main className={styles.main}>
+//         <h1 className={styles.title}>{id}</h1>
 
-        <img src={car.image} width="300px" className={styles.carImage} />
-      </main>
-    </div>
-  );
-}
+//         <img src={car.image} width="300px" className={styles.carImage} />
+//       </main>
+//     </div>
+//   );
+// }
 
-export async function getServerSideProps({ params }) {
-  const BASE_URL =
-    process.env.NODE_ENV === "production"
-      ? "https://nextjs-basics-2025.vercel.app"
-      : "http://localhost:3000";
+// export async function getServerSideProps({ params }) {
+//   const BASE_URL =
+//     process.env.NODE_ENV === "production"
+//       ? "https://nextjs-basics-2025.vercel.app"
+//       : "http://localhost:3000";
 
-  const req = await fetch(`${BASE_URL}/${params.id}.json`);
-  const data = await req.json();
+//   const req = await fetch(`${BASE_URL}/${params.id}.json`);
+//   const data = await req.json();
 
-  return {
-    props: { car: data },
-  };
-}
+//   return {
+//     props: { car: data },
+//   };
+// }
 
 // export async function getStaticProps({ params }) {
 
@@ -60,3 +60,42 @@ export async function getServerSideProps({ params }) {
 //         fallback: false
 //     };
 // }
+//*---------------------------------------------------------------------------
+import Head from "next/head";
+import Image from "next/image";
+import styles from "../../styles/Home.module.css";
+import fs from "fs";
+import path from "path";
+
+export default function Car({ car }) {
+  return (
+    <div className={styles.container}>
+      <Head>
+        <title>
+          {car.color} {car.id}
+        </title>
+      </Head>
+
+      <main className={styles.main}>
+        <h1 className={styles.title}>{car.id}</h1>
+        <Image src={car.image} width={300} height={200} alt={car.id} />
+      </main>
+    </div>
+  );
+}
+
+export async function getServerSideProps({ params }) {
+  try {
+    // Build path to JSON file in public folder
+    const filePath = path.join(process.cwd(), "public", `${params.id}.json`);
+
+    // Read and parse JSON
+    const data = JSON.parse(fs.readFileSync(filePath, "utf8"));
+
+    return { props: { car: data } };
+  } catch (err) {
+    console.error(err);
+    // Show 404 if JSON file not found
+    return { notFound: true };
+  }
+}
